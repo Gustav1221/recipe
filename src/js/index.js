@@ -1,7 +1,6 @@
-const a = [12,45,1221];
-let add = a => {
-    console.log(`Тоо : ${a}`);
-    const b = [...a,22,33];
-    console.log(b);
-}
-add(a);
+require("@babel/polyfill")
+import axios from "axios";
+import Search from './model/Search'
+
+let search = new Search('pasta');
+search.doSearch().then(r=> console.log(r));
