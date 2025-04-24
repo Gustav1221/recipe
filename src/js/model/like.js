@@ -19,11 +19,13 @@ export default class Like{
         this.likedItems.splice(index,1);
     }
     isLiked(id){
-        /* if(this.likedItems.findIndex(el=> el.id===id) === -1) return false;
-        else return true; */
         return this.likedItems.findIndex(el=> el.id===id) !== -1;
     }
     getNumberOfLikes(){
         return this.likedItems.length
+    }
+
+    saveDataToLocalStorage(){
+        localStorage.setItem('likes', JSON.stringify(this.likedItems));
     }
 }

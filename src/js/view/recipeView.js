@@ -11,7 +11,7 @@ const renderNairlaga =recipe=>
                         </div>
                     </li>`;
 
-const renderRecipeDetail = (recipe)=>{
+const renderRecipeDetail = (recipe,isLiked)=>{
     const details = `<figure class="recipe__fig">
                 <img src="${recipe.image_url}" alt="${recipe.title}" class="recipe__img">
                 <h1 class="recipe__title">
@@ -49,7 +49,7 @@ const renderRecipeDetail = (recipe)=>{
                 </div>
                 <button class="recipe__love">
                     <svg class="header__likes">
-                        <use href="img/icons.svg#icon-heart-outlined"></use>
+                        <use href="img/icons.svg#icon-heart${isLiked ? '' : '-outlined'}"></use>
                     </svg>
                 </button>
             </div>
@@ -91,12 +91,12 @@ export const highlightSelectedRecipe =id=>{
     const arr = Array.from(document.querySelectorAll('.results__link'));
     arr.forEach(el=> el.classList.remove('results__link--active'))
 
-    const domObj = document.querySelector(`a[href*="${id}"]`)
+    const domObj = document.querySelector(`.results__link[href*="${id}"]`)
     if(domObj) domObj.classList.add('results__link--active');
 }
 export const clearRecipe = ()=>{
     elements.recipeView.innerHTML = '';
 }
-export const renderDetail =(recipe)=>{
-    renderRecipeDetail(recipe);
+export const renderDetail =(recipe,isLiked)=>{
+    renderRecipeDetail(recipe,isLiked);
 }

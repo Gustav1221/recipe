@@ -7,6 +7,7 @@ import Like from "./model/like"
 import * as searchView from './view/searchView'
 import * as recipeView from './view/recipeView'
 import * as listView from './view/listView'
+import * as likeView from './view/likeView'
 import {elements, renderLoader, clearLoader} from './view/base'
 
 /* 
@@ -16,6 +17,8 @@ web app state
 -zahialj baigaa joriin nairlaguud
  */
 const state = {};
+//like hesgiig haragdahgu bolgoh
+likeView.toggleLikeMenu(0);
 //Хайлтын контроллер
 async function controlSearch(){
     //1.webees hailtiin tulhuur ugiig gargaj avna
@@ -54,6 +57,7 @@ async function controlRecipe () {
     //1. URL aas id-g salgaj avna
     const id = window.location.hash.replace('#','');
     //2. Joriin modeliig uusgene
+    if(!state.like)state.like = new Like();
     if(id){
         state.recipe = new Recipe(id)
         //3  UI delgetsiig beltgene
@@ -67,7 +71,7 @@ async function controlRecipe () {
         state.recipe.calcPorts();
         //6. Joroo delgetsend gargana
         clearLoader();
-        recipeView.renderDetail(state.recipe);
+        recipeView.renderDetail(state.recipe,state.like.isLiked(id));
     }
 }
 ['hashchange','load'].forEach(el=> window.addEventListener(el,controlRecipe))
@@ -92,16 +96,21 @@ const controlLike =()=>{
     if(!state.like)state.like = new Like();
     // Odoo haragdaj baigaa joriin id-g olj avah
     const currentRecipeId = state.recipe.id;
+    console.log(currentRecipeId);
     //terhuu joroo likelsan esehiig shalgah
     if(state.like.isLiked(currentRecipeId)){
         // Likelsan bol like-iig boliulna
         state.like.deleteLike(currentRecipeId)
-        console.log(state.like)
+        likeView.deleteLike(currentRecipeId)
+        likeView.toggleLikeBtn(false)
+        
     }else{  
         //likelaagui bol likelana
-        state.like.addLike(currentRecipeId,state.recipe.title, state.recipe.publisher, state.recipe.image_url)
-        console.log(state.like)
+        const newLike =  state.like.addLike(currentRecipeId,state.recipe.title, state.recipe.publisher, state.recipe.image_url)
+        likeView.renderLike(newLike);
+        likeView.toggleLikeBtn(true);
     }
+    likeView.toggleLikeMenu(state.like.getNumberOfLikes());
 }
 
 elements.recipeView.addEventListener('click',e =>{
